@@ -4,20 +4,17 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="#000000"
     android:orientation="vertical"
-    tools:context=".MainActivity" >
+    tools:context=".Splash">
 
-    <SearchView
-        android:id="@+id/pesquisar"
-        style="@android:style/Widget.Material.Light.EditText"
+    <Space
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:background="#7F7F7F"
-        android:orientation="vertical"
-        android:queryHint="Pesquisar" />
+        android:layout_height="210dp" />
 
-    <ListView
-        android:id="@+id/ListaPersonagens"
+    <pl.droidsonroids.gif.GifTextView
         android:layout_width="match_parent"
-        android:layout_height="match_parent" />
+        android:layout_height="230dp"
+        android:background="@drawable/starwars" />
+
 </LinearLayout>

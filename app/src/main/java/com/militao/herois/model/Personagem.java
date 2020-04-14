@@ -1,5 +1,7 @@
 package com.militao.herois.model;
 
+import com.militao.herois.api.Api;
+
 public class Personagem {
 
     public int id;
@@ -19,24 +21,7 @@ public class Personagem {
     public int[] vehicles;
     public int[] starships;
 
-    public Personagem(int id, String name, String edited, String created, String gender, String skin_color, String hair_color, String height, String eye_color, String mass, String homeworld, String birth_year, String image, int[] films, int[] vehicles, int[] starships) {
-        this.id = id;
-        this.name = name;
-        this.edited = edited;
-        this.created = created;
-        this.gender = gender;
-        this.skin_color = skin_color;
-        this.hair_color = hair_color;
-        this.height = height;
-        this.eye_color = eye_color;
-        this.mass = mass;
-        this.homeworld = homeworld;
-        this.birth_year = birth_year;
-        this.image = image;
-        this.films = films;
-        this.vehicles = vehicles;
-        this.starships = starships;
-    }
+
 
     public int getId() {
         return id;
@@ -135,7 +120,7 @@ public class Personagem {
     }
 
     public String getImage() {
-        return image;
+        return Api.BASE_URL + image;
     }
 
     public void setImage(String image) {
