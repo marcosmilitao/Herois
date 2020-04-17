@@ -7,17 +7,18 @@
     android:orientation="vertical"
     tools:context=".MainActivity" >
 
-    <SearchView
+    <EditText
         android:id="@+id/pesquisar"
-        style="@android:style/Widget.Material.Light.EditText"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="#7F7F7F"
-        android:orientation="vertical"
-        android:queryHint="Pesquisar" />
+        android:ems="10"
+        android:inputType="textPersonName"
+        android:hint="Pesquisar"/>
 
     <ListView
         android:id="@+id/ListaPersonagens"
         android:layout_width="match_parent"
-        android:layout_height="match_parent" />
+        android:layout_height="match_parent" >
+
+    </ListView>
 </LinearLayout>

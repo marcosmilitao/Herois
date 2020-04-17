@@ -16,22 +16,26 @@ import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.BaseAdapter;
+import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
 
+import com.militao.herois.adapter.ListaPersonagemAdapter;
 import com.militao.herois.api.Api;
+import com.militao.herois.api.Service;
 import com.militao.herois.model.ItemLista;
 import com.militao.herois.model.Personagem;
 
-import java.io.InputStream;
-import java.net.URL;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -40,18 +44,17 @@ public class MainActivity extends AppCompatActivity {
     ArrayList<ItemLista> itemLista;
     ItemLista item;
     Api api;
+
+    ListaPersonagemAdapter listaPersonagemAdapter;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
         final ListView lv = findViewById(R.id.ListaPersonagens);
-        Retrofit retrofit = new Retrofit.Builder()
-                .baseUrl(Api.BASE_URL)
-                .addConverterFactory(GsonConverterFactory.create())
-                .build();
+        EditText pesquisar = findViewById(R.id.pesquisar);
 
-        api = retrofit.create(Api.class);
+        api = Service.getClient(this).create(Api.class);
 
         Call<List<Personagem>> call = api.listarPersonagens();
 
@@ -63,79 +66,43 @@ public class MainActivity extends AppCompatActivity {
 
                 itemLista = new ArrayList<ItemLista>();
                 for(Personagem p : lista ){
-
-                    Log.d("Nome",p.getName());
-                    Log.d("Nome",p.getImage());
+//
+//                    Log.d("Nome",p.getName());
+//                    Log.d("Nome",p.getImage());
 
                     itemLista.add(new ItemLista(p.getName(),p.getImage()));
                 }
 
 
-                CustomAdapter customAdapter = new CustomAdapter(MainActivity.this, itemLista);
-                lv.setAdapter(customAdapter);
+                listaPersonagemAdapter = new ListaPersonagemAdapter(MainActivity.this, itemLista);
+                lv.setAdapter(listaPersonagemAdapter);
 
 
             }
 
             @Override
             public void onFailure(Call<List<Personagem>> call, Throwable t) {
-                Log.d("ERROR", "><><><><><><><>><<><><>><><><>><><><><><><");
+                Log.d("ERROR", t.toString());
             }
         });
 
-    }
 
-    class CustomAdapter extends ArrayAdapter<ItemLista> {
+        pesquisar.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
 
-
-        CustomAdapter(Context  c, ArrayList <ItemLista> list){
-            super(c,0,list);
-
-        }
-
-
-        @NonNull
-        @Override
-        public View getView(int position, @Nullable View convertView, @NonNull ViewGroup parent) {
-            LayoutInflater layoutInflater = (LayoutInflater) getApplicationContext().getApplicationContext().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-            View v = LayoutInflater.from(getContext()).inflate(R.layout.personagem_item, parent, false);
-
-            ItemLista item = getItem(position);
-
-            TextView nome = v.findViewById(R.id.txt_nome);
-            ImageView image = v.findViewById(R.id.img_foto);
-
-            if (item != null) {
-                new DownloadImageTask(image).execute(item.getUrlImagem());
-                nome.setText(item.getNome());
             }
 
-            return v;
-        }
-
-
-    }
-
-    private class DownloadImageTask extends AsyncTask<String, Void, Bitmap> {
-        ImageView bmImage;
-        public DownloadImageTask(ImageView bmImage) {
-            this.bmImage = bmImage;
-        }
-
-        protected Bitmap doInBackground(String... urls) {
-            String urldisplay = urls[0];
-            Bitmap bmp = null;
-            try {
-                InputStream in = new java.net.URL(urldisplay).openStream();
-                bmp = BitmapFactory.decodeStream(in);
-            } catch (Exception e) {
-                Log.e("Error", e.getMessage());
-                e.printStackTrace();
+            @Override
+            public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+                listaPersonagemAdapter.getFilter().filter(charSequence);
             }
-            return bmp;
-        }
-        protected void onPostExecute(Bitmap result) {
-            bmImage.setImageBitmap(result);
-        }
+
+            @Override
+            public void afterTextChanged(Editable editable) {
+
+            }
+        });
     }
+
 }
