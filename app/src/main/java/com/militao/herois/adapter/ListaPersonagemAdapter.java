@@ -1,6 +1,7 @@
 package com.militao.herois.adapter;
 
 import android.content.Context;
+import android.content.Intent;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -11,6 +12,8 @@ import android.widget.Filterable;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.militao.herois.DetalhesActivity;
+import com.militao.herois.MainActivity;
 import com.militao.herois.R;
 import com.militao.herois.model.ItemLista;
 import com.militao.herois.task.DownloadImagemTask;
@@ -75,7 +78,9 @@ public class ListaPersonagemAdapter extends BaseAdapter implements Filterable {
             public void onClick(View view) {
                 Log.d("main activity", itens.get(pos).nome);
 
-                // startActivity(new Intent(MainActivity.this,ItemsPreviewActivity.class).putExtra("items",itemsModelListFiltered.get(position)));
+                c.startActivity(new Intent(c, DetalhesActivity.class)
+                        .putExtra("nome_personagem",itens.get(pos).nome)
+                        .putExtra("imagem",itens.get(pos).urlImagem));
 
             }
         });

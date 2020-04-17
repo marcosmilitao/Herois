@@ -2,24 +2,33 @@ package com.militao.herois.model;
 
 import com.militao.herois.api.Api;
 
-public class Personagem {
+import java.util.List;
 
-    public int id;
-    public String name;
-    public String edited;
-    public String created;
-    public String gender;
-    public String skin_color;
-    public String hair_color;
-    public String height;
-    public String eye_color;
-    public String mass;
-    public String homeworld;
-    public String birth_year;
-    public String image;
-    public int[] films;
-    public int[] vehicles;
-    public int[] starships;
+import io.realm.RealmList;
+import io.realm.RealmObject;
+import io.realm.annotations.PrimaryKey;
+
+public class Personagem extends RealmObject {
+
+    @PrimaryKey
+    private int id;
+
+    private String name;
+    private String edited;
+    private String created;
+    private String gender;
+    private String skin_color;
+    private String hair_color;
+    private String height;
+    private String eye_color;
+    private String mass;
+    private String homeworld;
+    private String birth_year;
+    private String image;
+    private RealmList<Integer> films;
+    //private List<Integer> films;
+//    public int[] vehicles;
+//    public int[] starships;
 
 
 
@@ -120,34 +129,42 @@ public class Personagem {
     }
 
     public String getImage() {
-        return Api.BASE_URL + image;
+        return image;
     }
 
     public void setImage(String image) {
-        this.image = image;
+        this.image = Api.BASE_URL + image;
     }
+//
+//    public List<Integer> getFilms() {
+//        return films;
+//    }
+//
+//    public void setFilms(List<Integer>  films) {
+//        this.films = films;
+//    }
 
-    public int[] getFilms() {
+//    public int[] getVehicles() {
+//        return vehicles;
+//    }
+//
+//    public void setVehicles(int[] vehicles) {
+//        this.vehicles = vehicles;
+//    }
+//
+//    public int[] getStarships() {
+//        return starships;
+//    }
+//
+//    public void setStarships(int[] starships) {
+//        this.starships = starships;
+//    }
+
+    public RealmList<Integer> getFilms() {
         return films;
     }
 
-    public void setFilms(int[] films) {
+    public void setFilms(RealmList<Integer> films) {
         this.films = films;
-    }
-
-    public int[] getVehicles() {
-        return vehicles;
-    }
-
-    public void setVehicles(int[] vehicles) {
-        this.vehicles = vehicles;
-    }
-
-    public int[] getStarships() {
-        return starships;
-    }
-
-    public void setStarships(int[] starships) {
-        this.starships = starships;
     }
 }
