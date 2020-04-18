@@ -1,150 +1,104 @@
 package com.militao.herois;
 
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
-import androidx.appcompat.app.AppCompatActivity;
-import io.realm.OrderedCollectionChangeSet;
-import io.realm.OrderedRealmCollectionChangeListener;
-import io.realm.Realm;
-import io.realm.RealmList;
-import io.realm.RealmResults;
-import retrofit2.Call;
-import retrofit2.Callback;
-import retrofit2.Response;
-import retrofit2.Retrofit;
-import retrofit2.converter.gson.GsonConverterFactory;
-
-import android.annotation.SuppressLint;
-import android.content.Context;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
-import android.net.Uri;
-import android.os.AsyncTask;
 import android.os.Bundle;
-import android.text.Editable;
-import android.text.TextWatcher;
-import android.util.Log;
-import android.view.LayoutInflater;
-import android.view.View;
-import android.view.ViewGroup;
-import android.widget.ArrayAdapter;
-import android.widget.BaseAdapter;
-import android.widget.Button;
+import androidx.appcompat.app.AppCompatActivity;
+import android.view.Menu;
+import android.view.MenuItem;
+
 import android.widget.EditText;
-import android.widget.ImageView;
 import android.widget.ListView;
-import android.widget.TextView;
+
+
+import android.app.SearchManager;
+
+import android.widget.SearchView.OnQueryTextListener;
+
+import androidx.appcompat.widget.SearchView;
+
+import androidx.appcompat.widget.Toolbar;
 
 import com.militao.herois.adapter.ListaPersonagemAdapter;
-import com.militao.herois.api.Api;
-import com.militao.herois.api.Service;
 import com.militao.herois.dao.PersonagemDao;
-import com.militao.herois.model.ItemLista;
 import com.militao.herois.model.Personagem;
 
-
 import java.util.ArrayList;
-import java.util.List;
+
+import io.realm.Realm;
+import io.realm.RealmResults;
 
 public class MainActivity extends AppCompatActivity {
 
-    ArrayList<ItemLista> itemLista;
-    ItemLista item;
-    Api api;
+    ArrayList<Personagem> itemLista;
     Realm realm;
-    List<Personagem> lista;
     PersonagemDao  personagemDao;
-
     RealmResults<Personagem> listaPersonagens;
-
     ListaPersonagemAdapter listaPersonagemAdapter;
+
+
+
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
         personagemDao = new PersonagemDao();
         final ListView lv = findViewById(R.id.ListaPersonagens);
-        EditText pesquisar = findViewById(R.id.pesquisar);
-        Button button = findViewById(R.id.button);
+        //EditText pesquisar = findViewById(R.id.pesquisar);
         realm = Realm.getDefaultInstance();
-        api = Service.getClient(this).create(Api.class);
-        itemLista = new ArrayList<ItemLista>();
-        listaPersonagens = Realm.getDefaultInstance().where(Personagem.class).findAll();
 
-//        listaPersonagens.addChangeListener(new OrderedRealmCollectionChangeListener<RealmResults<Personagem>>() {
-//            @Override
-//            public void onChange(RealmResults<Personagem> personagems, OrderedCollectionChangeSet changeSet) {
-//                for(Personagem p : personagems ){
-//
-//                    itemLista.add(new ItemLista(p.getName(),p.getImage()));
-//                }
-//            }
-//        });
+        Toolbar mToolbar = (Toolbar) findViewById(R.id.toolbar);
+        setSupportActionBar(mToolbar);
+        itemLista = new ArrayList<Personagem>();
+        listaPersonagens = personagemDao.todosPersonagens();
 
-        for(Personagem p : listaPersonagens ){
-           Log.e("IMAGEM", p.getImage());
-                    itemLista.add(new ItemLista(p.getName(),p.getImage()));
-               }
-//
+
+         itemLista.addAll(realm.copyFromRealm(listaPersonagens));
+
         listaPersonagemAdapter = new ListaPersonagemAdapter(MainActivity.this, itemLista);
         lv.setAdapter(listaPersonagemAdapter);
-//        Call<List<Personagem>> call = api.listarPersonagens();
+
 //
-//        call.enqueue(new Callback<List<Personagem>>() {
+//        pesquisar.addTextChangedListener(new TextWatcher() {
 //            @Override
-//            public void onResponse(Call<List<Personagem>> call, Response<List<Personagem>> response) {
-//                Log.d("OK", "><><><><><><><>><<><><>><><><>><><><><><><");
-//                lista = response.body();
-//
-//                itemLista = new ArrayList<ItemLista>();
-//                for(Personagem p : lista ){
-//
-//                    itemLista.add(new ItemLista(p.getName(),p.getImage()));
-//                }
-//
-//
-//                listaPersonagemAdapter = new ListaPersonagemAdapter(MainActivity.this, itemLista);
-//                lv.setAdapter(listaPersonagemAdapter);
-//
+//            public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
 //
 //            }
 //
 //            @Override
-//            public void onFailure(Call<List<Personagem>> call, Throwable t) {
-//                Log.d("ERROR", t.toString());
+//            public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+//                listaPersonagemAdapter.getFilter().filter(charSequence);
+//            }
+//
+//            @Override
+//            public void afterTextChanged(Editable editable) {
+//
 //            }
 //        });
-
-
-        pesquisar.addTextChangedListener(new TextWatcher() {
-            @Override
-            public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
-
-            }
-
-            @Override
-            public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
-                listaPersonagemAdapter.getFilter().filter(charSequence);
-            }
-
-            @Override
-            public void afterTextChanged(Editable editable) {
-
-            }
-        });
-
-        button.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                for(Personagem p : lista ){
-
-                    //saveData(p);
-
-                    personagemDao.addPersonagem(p);
-                }
-            }
-        });
     }
 
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
 
+        getMenuInflater().inflate(R.menu.main_menu, menu);
+
+        MenuItem mSearch = menu.findItem(R.id.action_search);
+
+        SearchView mSearchView = (SearchView) mSearch.getActionView();
+        mSearchView.setQueryHint("Pesquisar");
+
+        mSearchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+            @Override
+            public boolean onQueryTextSubmit(String query) {
+                return false;
+            }
+
+            @Override
+            public boolean onQueryTextChange(String newText) {
+                listaPersonagemAdapter.getFilter().filter(newText);
+                return false;
+            }
+        });
+        return super.onCreateOptionsMenu(menu);
+    }
 }

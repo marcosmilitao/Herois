@@ -8,23 +8,26 @@ import android.util.Log;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.militao.herois.dao.PersonagemDao;
+import com.militao.herois.model.Personagem;
 import com.militao.herois.task.DownloadImagemTask;
 
 public class DetalhesActivity extends AppCompatActivity {
-
+    PersonagemDao personagemDao;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_detalhes);
 
+        personagemDao = new PersonagemDao();
         Intent intent = getIntent();
-
+        Personagem personagem = new Personagem();
         TextView textView = findViewById(R.id.detalhe_nome);
         ImageView imageView = findViewById(R.id.img_foto_detalhe);
 
-        Log.i("TESTE", intent.getExtras().getString("nome_personagem"));
-        textView.setText(intent.getExtras().getString("nome_personagem"));
+        personagem = personagemDao.personagemPorId(intent.getExtras().getInt("id"));
 
-        new DownloadImagemTask(imageView).execute(intent.getStringExtra("imagem"));
+        textView.setText(personagem.getName());
+        new DownloadImagemTask(imageView).execute(personagem.getImage());
     }
 }

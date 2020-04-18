@@ -1,27 +1,22 @@
 package com.militao.herois.model;
 
-import java.util.List;
+import io.realm.RealmObject;
+import io.realm.annotations.PrimaryKey;
 
 public class Filme {
-    public String producer;
-    public String title;
-    public String created;
-    public int episode_id;
-    public String director;
-    public String release_date;
-    public String opening_crawl;
-    public int id;
 
-    public Filme(String producer, String title, String created, int episode_id, String director, String release_date, String opening_crawl, int id) {
-        this.producer = producer;
-        this.title = title;
-        this.created = created;
-        this.episode_id = episode_id;
-        this.director = director;
-        this.release_date = release_date;
-        this.opening_crawl = opening_crawl;
-        this.id = id;
-    }
+
+    private int id;
+
+    private int episode_id;
+    private String producer;
+    private String title;
+    private String created;
+    private String director;
+    private String release_date;
+
+
+
 
     public String getProducer() {
         return producer;
@@ -69,14 +64,6 @@ public class Filme {
 
     public void setRelease_date(String release_date) {
         this.release_date = release_date;
-    }
-
-    public String getOpening_crawl() {
-        return opening_crawl;
-    }
-
-    public void setOpening_crawl(String opening_crawl) {
-        this.opening_crawl = opening_crawl;
     }
 
     public int getId() {

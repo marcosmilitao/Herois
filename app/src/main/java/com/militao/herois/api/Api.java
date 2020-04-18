@@ -1,5 +1,6 @@
 package com.militao.herois.api;
 
+import com.militao.herois.model.Filme;
 import com.militao.herois.model.Personagem;
 
 import java.util.List;
@@ -12,4 +13,7 @@ public interface Api {
 
     @GET("people")
     Call<List<Personagem>> listarPersonagens();
+
+    @GET("films")
+    Call<List<Filme>> listarFilmes();
 }

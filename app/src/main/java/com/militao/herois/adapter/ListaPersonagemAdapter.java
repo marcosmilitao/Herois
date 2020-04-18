@@ -13,9 +13,8 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.militao.herois.DetalhesActivity;
-import com.militao.herois.MainActivity;
 import com.militao.herois.R;
-import com.militao.herois.model.ItemLista;
+import com.militao.herois.model.Personagem;
 import com.militao.herois.task.DownloadImagemTask;
 
 import java.util.ArrayList;
@@ -23,11 +22,11 @@ import java.util.ArrayList;
 public class ListaPersonagemAdapter extends BaseAdapter implements Filterable {
 
     Context c;
-    ArrayList<ItemLista> itens;
+    ArrayList<Personagem> itens;
     CustomFilter filter;
-    ArrayList<ItemLista> filterList;
+    ArrayList<Personagem> filterList;
 
-    public ListaPersonagemAdapter(Context ctx,ArrayList<ItemLista> personagem) {
+    public ListaPersonagemAdapter(Context ctx,ArrayList<Personagem> personagem) {
         // TODO Auto-generated constructor stub
 
         this.c=ctx;
@@ -68,19 +67,18 @@ public class ListaPersonagemAdapter extends BaseAdapter implements Filterable {
         ImageView img=(ImageView) view.findViewById(R.id.img_foto);
 
         if(itens != null) {
-            nameTxt.setText(itens.get(pos).getNome());
-            new DownloadImagemTask(img).execute(itens.get(pos).getUrlImagem());
+            nameTxt.setText(itens.get(pos).getName());
+            new DownloadImagemTask(img).execute(itens.get(pos).getImage());
         }
 
 
         view.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Log.d("main activity", itens.get(pos).nome);
+                Log.d("main activity", itens.get(pos).getName());
 
                 c.startActivity(new Intent(c, DetalhesActivity.class)
-                        .putExtra("nome_personagem",itens.get(pos).nome)
-                        .putExtra("imagem",itens.get(pos).urlImagem));
+                        .putExtra("id",itens.get(pos).getId()));
 
             }
         });
@@ -114,14 +112,14 @@ public class ListaPersonagemAdapter extends BaseAdapter implements Filterable {
                 //CONSTARINT TO UPPER
                 constraint=constraint.toString().toUpperCase();
 
-                ArrayList<ItemLista> filters=new ArrayList<ItemLista>();
-
+                ArrayList<Personagem> filters=new ArrayList<Personagem>();
+                Personagem p = new Personagem();
                 //get specific items
                 for(int i=0;i<filterList.size();i++)
                 {
-                    if(filterList.get(i).getNome().toUpperCase().contains(constraint))
+                    if(filterList.get(i).getName().toUpperCase().contains(constraint))
                     {
-                        ItemLista p=new ItemLista(filterList.get(i).getNome(), filterList.get(i).getUrlImagem());
+                       p = filterList.get(i);
 
                         filters.add(p);
                     }
@@ -144,7 +142,7 @@ public class ListaPersonagemAdapter extends BaseAdapter implements Filterable {
         protected void publishResults(CharSequence constraint, FilterResults results) {
             // TODO Auto-generated method stub
 
-            itens =(ArrayList<ItemLista>) results.values;
+            itens =(ArrayList<Personagem>) results.values;
             notifyDataSetChanged();
         }
 

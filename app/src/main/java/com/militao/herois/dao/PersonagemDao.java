@@ -5,6 +5,7 @@ import android.util.Log;
 import com.militao.herois.model.Personagem;
 
 import io.realm.Realm;
+import io.realm.RealmResults;
 
 public class PersonagemDao {
 
@@ -15,28 +16,7 @@ public class PersonagemDao {
             @Override
             public void execute(Realm realm) {
                 try {
-
-
-                    Number maxId = realm.where(Personagem.class).max("id");
-
-                    int novoId = (maxId == null) ? 1 : maxId.intValue() + 1;
-
-                    Personagem personagem = realm.createObject(Personagem.class, novoId);
-                    personagem.setName(p.getName());
-                    personagem.setImage(p.getImage());
-
-                    personagem.setBirth_year(p.getBirth_year());
-                    personagem.setCreated(p.getCreated());
-                    personagem.setEdited(p.getEdited());
-                    personagem.setEye_color(p.getEye_color());
-                    personagem.setHeight(p.getHeight());
-                    personagem.setFilms(p.getFilms());
-
-                    personagem.setGender(p.getGender());
-                    personagem.setSkin_color(p.getSkin_color());
-                    personagem.setHair_color(p.getHair_color());
-                    personagem.setMass(p.getMass());
-                    personagem.setHomeworld(p.getHomeworld());
+                    realm.copyToRealmOrUpdate(p);
                 }catch (Exception e){
                     Log.e("Error", e.getMessage());
                 }
@@ -55,4 +35,11 @@ public class PersonagemDao {
         });
     }
 
+    public RealmResults todosPersonagens(){
+       return Realm.getDefaultInstance().where(Personagem.class).findAll();
+    }
+
+    public Personagem personagemPorId(int id){
+        return  Realm.getDefaultInstance().where(Personagem.class).equalTo("id",id).findFirst();
+    }
 }

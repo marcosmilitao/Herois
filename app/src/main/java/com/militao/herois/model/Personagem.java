@@ -2,8 +2,6 @@ package com.militao.herois.model;
 
 import com.militao.herois.api.Api;
 
-import java.util.List;
-
 import io.realm.RealmList;
 import io.realm.RealmObject;
 import io.realm.annotations.PrimaryKey;
@@ -26,11 +24,6 @@ public class Personagem extends RealmObject {
     private String birth_year;
     private String image;
     private RealmList<Integer> films;
-    //private List<Integer> films;
-//    public int[] vehicles;
-//    public int[] starships;
-
-
 
     public int getId() {
         return id;
@@ -129,36 +122,12 @@ public class Personagem extends RealmObject {
     }
 
     public String getImage() {
-        return image;
+        return Api.BASE_URL + image;
     }
 
     public void setImage(String image) {
-        this.image = Api.BASE_URL + image;
+        this.image = image;
     }
-//
-//    public List<Integer> getFilms() {
-//        return films;
-//    }
-//
-//    public void setFilms(List<Integer>  films) {
-//        this.films = films;
-//    }
-
-//    public int[] getVehicles() {
-//        return vehicles;
-//    }
-//
-//    public void setVehicles(int[] vehicles) {
-//        this.vehicles = vehicles;
-//    }
-//
-//    public int[] getStarships() {
-//        return starships;
-//    }
-//
-//    public void setStarships(int[] starships) {
-//        this.starships = starships;
-//    }
 
     public RealmList<Integer> getFilms() {
         return films;
