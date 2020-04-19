@@ -14,17 +14,23 @@ import android.widget.TextView;
 
 import com.militao.herois.DetalhesActivity;
 import com.militao.herois.R;
+import com.militao.herois.dao.FilmeDao;
+import com.militao.herois.model.Filme;
 import com.militao.herois.model.Personagem;
 import com.militao.herois.task.DownloadImagemTask;
 
 import java.util.ArrayList;
 
+
+import io.realm.RealmResults;
+
 public class ListaPersonagemAdapter extends BaseAdapter implements Filterable {
 
-    Context c;
-    ArrayList<Personagem> itens;
-    CustomFilter filter;
-    ArrayList<Personagem> filterList;
+    private Context c;
+    private ArrayList<Personagem> itens;
+    private CustomFilter filter;
+    private ArrayList<Personagem> filterList;
+
 
     public ListaPersonagemAdapter(Context ctx,ArrayList<Personagem> personagem) {
         // TODO Auto-generated constructor stub
@@ -97,7 +103,7 @@ public class ListaPersonagemAdapter extends BaseAdapter implements Filterable {
         return filter;
     }
 
-    //INNER CLASS
+
     class CustomFilter extends Filter
     {
 
@@ -109,19 +115,30 @@ public class ListaPersonagemAdapter extends BaseAdapter implements Filterable {
 
             if(constraint != null && constraint.length()>0)
             {
-                //CONSTARINT TO UPPER
+
                 constraint=constraint.toString().toUpperCase();
 
                 ArrayList<Personagem> filters=new ArrayList<Personagem>();
-                Personagem p = new Personagem();
-                //get specific items
+                Personagem p;
+
                 for(int i=0;i<filterList.size();i++)
                 {
-                    if(filterList.get(i).getName().toUpperCase().contains(constraint))
+                    boolean t = false;
+
+                    for(Filme filme : filterList.get(i).getListaFilmes()){
+                        if(filme.getTitle().toUpperCase().contains(constraint)){
+                            p = filterList.get(i);
+                            filters.add(p);
+                            t = true;
+                            break;
+                        }
+                    }
+
+
+                    if(filterList.get(i).getName().toUpperCase().contains(constraint) && t == false)
                     {
                        p = filterList.get(i);
-
-                        filters.add(p);
+                       filters.add(p);
                     }
                 }
 
@@ -148,4 +165,13 @@ public class ListaPersonagemAdapter extends BaseAdapter implements Filterable {
 
     }
 
+    private RealmResults<Filme> listarFilmes(CharSequence c){
+        RealmResults<Filme> filmes;
+        FilmeDao filmeDao = new FilmeDao();
+        filmes = filmeDao.todosFilmes();
+
+
+
+        return filmes;
+    }
 }

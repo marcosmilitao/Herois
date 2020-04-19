@@ -1,6 +1,9 @@
 package com.militao.herois.model;
 
+import android.util.Log;
+
 import com.militao.herois.api.Api;
+import com.militao.herois.dao.FilmeDao;
 
 import io.realm.RealmList;
 import io.realm.RealmObject;
@@ -24,6 +27,9 @@ public class Personagem extends RealmObject {
     private String birth_year;
     private String image;
     private RealmList<Integer> films;
+    private RealmList<Filme> listaFilmes;
+
+
 
     public int getId() {
         return id;
@@ -122,7 +128,7 @@ public class Personagem extends RealmObject {
     }
 
     public String getImage() {
-        return Api.BASE_URL + image;
+        return image;
     }
 
     public void setImage(String image) {
@@ -134,6 +140,15 @@ public class Personagem extends RealmObject {
     }
 
     public void setFilms(RealmList<Integer> films) {
+
         this.films = films;
+    }
+
+    public RealmList<Filme> getListaFilmes() {
+        return listaFilmes;
+    }
+
+    public void setListaFilmes(RealmList<Filme> listaFilmes) {
+        this.listaFilmes = listaFilmes;
     }
 }

@@ -1,11 +1,12 @@
 package com.militao.herois.model;
 
+import io.realm.RealmList;
 import io.realm.RealmObject;
 import io.realm.annotations.PrimaryKey;
 
-public class Filme {
+public class Filme extends RealmObject{
 
-
+    @PrimaryKey
     private int id;
 
     private int episode_id;
@@ -14,8 +15,7 @@ public class Filme {
     private String created;
     private String director;
     private String release_date;
-
-
+    private RealmList<Integer> characters;
 
 
     public String getProducer() {
@@ -72,5 +72,13 @@ public class Filme {
 
     public void setId(int id) {
         this.id = id;
+    }
+
+    public RealmList<Integer> getCharacters() {
+        return characters;
+    }
+
+    public void setCharacters(RealmList<Integer> characters) {
+        this.characters = characters;
     }
 }
