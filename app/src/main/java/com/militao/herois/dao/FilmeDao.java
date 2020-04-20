@@ -1,6 +1,5 @@
 package com.militao.herois.dao;
 
-import android.content.Intent;
 import android.util.Log;
 
 import com.militao.herois.model.Filme;
